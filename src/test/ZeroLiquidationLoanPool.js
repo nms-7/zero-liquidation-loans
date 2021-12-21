@@ -155,23 +155,23 @@ contract("ZeroLiquidationLoanPool", ([deployer, liquidity_provider_1,
       await forceSend.go(WETH_HOLDER_ADDRESS, { value: ether('1') });
 
       // top up test accounts with WETH
-      let weth_amount_lp_1 = ether('80')
+      let weth_amount_lp_1 = ether('80').toString()
       await collateral_ccy_token.methods.transfer(liquidity_provider_1,
         weth_amount_lp_1).send({from: WETH_HOLDER_ADDRESS});
 
-      let weth_amount_lp_2 = ether('41')
+      let weth_amount_lp_2 = ether('41').toString()
       await collateral_ccy_token.methods.transfer(liquidity_provider_2,
         weth_amount_lp_2).send({from: WETH_HOLDER_ADDRESS});
 
-      let weth_amount_lp_3 = ether('28')
+      let weth_amount_lp_3 = ether('28').toString()
       await collateral_ccy_token.methods.transfer(liquidity_provider_3,
         weth_amount_lp_3).send({from: WETH_HOLDER_ADDRESS});
 
-      let weth_amount_lp_4 = ether('10')
+      let weth_amount_lp_4 = ether('10').toString()
       await collateral_ccy_token.methods.transfer(liquidity_provider_4,
         weth_amount_lp_4).send({from: WETH_HOLDER_ADDRESS});
 
-      let weth_amount_borrower = ether('80')
+      let weth_amount_borrower = ether('80').toString()
       await collateral_ccy_token.methods.transfer(borrower,
         weth_amount_borrower).send({from: WETH_HOLDER_ADDRESS});
 
@@ -376,17 +376,17 @@ contract("ZeroLiquidationLoanPool", ([deployer, liquidity_provider_1,
 
     it("must be fundable by liquidity providers during LP period (1/5)",
     async () => {
-      let weth_amount = ether('80');
+      let weth_amount = ether('80').toString();
       await collateral_ccy_token.methods.approve(contract_addr, weth_amount).
         send({from: liquidity_provider_1});
 
       let usdc_amount = await zeroLiquidationLoanPool.get_lp_borrow_ccy_amount(
         weth_amount);
-      await borrow_ccy_token.methods.approve(contract_addr, usdc_amount).send(
+      await borrow_ccy_token.methods.approve(contract_addr, usdc_amount.toString()).send(
         {from: liquidity_provider_1});
 
       let receipt = await zeroLiquidationLoanPool.
-        provide_liquidity_and_receive_shares(weth_amount, usdc_amount,
+        provide_liquidity_and_receive_shares(weth_amount, usdc_amount.toString(),
         { from: liquidity_provider_1} );
 
       let pool_shares = await zeroLiquidationLoanPool.pool_shares(
@@ -428,7 +428,7 @@ contract("ZeroLiquidationLoanPool", ([deployer, liquidity_provider_1,
         get_lp_borrow_ccy_amount(weth_amount);
       expect(usdc_amount_exp.toString()).to.equal(usdc_amount.toString());
 
-      await collateral_ccy_token.methods.approve(contract_addr, weth_amount).
+      await collateral_ccy_token.methods.approve(contract_addr, weth_amount.toString()).
         send({from: liquidity_provider_4});
 
       let pool_shares_pre = await zeroLiquidationLoanPool.pool_shares(
@@ -473,13 +473,13 @@ contract("ZeroLiquidationLoanPool", ([deployer, liquidity_provider_1,
 
     it("must be fundable by liquidity providers during LP period (3/5)",
     async () => {
-      let weth_amount = ether('41');
+      let weth_amount = ether('41').toString();
       await collateral_ccy_token.methods.approve(contract_addr, weth_amount).
         send({from: liquidity_provider_2});
 
       let usdc_amount = await zeroLiquidationLoanPool.get_lp_borrow_ccy_amount(
         weth_amount);
-      await borrow_ccy_token.methods.approve(contract_addr, usdc_amount).send(
+      await borrow_ccy_token.methods.approve(contract_addr, usdc_amount.toString()).send(
         {from: liquidity_provider_2});
 
       let collateral_ccy_supply_prev =  await zeroLiquidationLoanPool.
@@ -488,7 +488,7 @@ contract("ZeroLiquidationLoanPool", ([deployer, liquidity_provider_1,
         borrow_ccy_supply.call();
 
       let receipt = await zeroLiquidationLoanPool.
-        provide_liquidity_and_receive_shares(weth_amount, usdc_amount,
+        provide_liquidity_and_receive_shares(weth_amount, usdc_amount.toString(),
         { from: liquidity_provider_2} );
 
       let pool_shares = await zeroLiquidationLoanPool.pool_shares(
@@ -519,13 +519,13 @@ contract("ZeroLiquidationLoanPool", ([deployer, liquidity_provider_1,
 
     it("must be fundable by liquidity providers during LP period (4/5)",
     async () => {
-      let weth_amount = ether('28');
+      let weth_amount = ether('28').toString();
       await collateral_ccy_token.methods.approve(contract_addr, weth_amount).
         send({from: liquidity_provider_3});
 
       let usdc_amount = await zeroLiquidationLoanPool.get_lp_borrow_ccy_amount(
         weth_amount);
-      await borrow_ccy_token.methods.approve(contract_addr, usdc_amount).send(
+      await borrow_ccy_token.methods.approve(contract_addr, usdc_amount.toString()).send(
         {from: liquidity_provider_3});
 
       let collateral_ccy_supply_prev =  await zeroLiquidationLoanPool.
@@ -534,7 +534,7 @@ contract("ZeroLiquidationLoanPool", ([deployer, liquidity_provider_1,
         borrow_ccy_supply.call();
 
       let receipt = await zeroLiquidationLoanPool.
-        provide_liquidity_and_receive_shares(weth_amount, usdc_amount,
+        provide_liquidity_and_receive_shares(weth_amount, usdc_amount.toString(),
         { from: liquidity_provider_3} );
 
       let pool_shares = await zeroLiquidationLoanPool.pool_shares(
@@ -626,18 +626,18 @@ contract("ZeroLiquidationLoanPool", ([deployer, liquidity_provider_1,
     });
 
     it("must not be possible provide liquidity in wrong ratio", async () => {
-      let weth_amount = ether('1');
+      let weth_amount = ether('1').toString();
       await collateral_ccy_token.methods.approve(contract_addr, weth_amount).
         send({from: liquidity_provider_3});
 
       let usdc_amount = new BN(await zeroLiquidationLoanPool.get_lp_borrow_ccy_amount(
         weth_amount));
       usdc_amount = usdc_amount.add(new BN(1));
-      await borrow_ccy_token.methods.approve(contract_addr, usdc_amount).send(
+      await borrow_ccy_token.methods.approve(contract_addr, usdc_amount.toString()).send(
         {from: liquidity_provider_3});
 
       await expectRevert(zeroLiquidationLoanPool.
-        provide_liquidity_and_receive_shares(weth_amount, usdc_amount,
+        provide_liquidity_and_receive_shares(weth_amount, usdc_amount.toString(),
         { from: liquidity_provider_3} ), "Unexpected amounts");
     });
 
@@ -865,7 +865,7 @@ contract("ZeroLiquidationLoanPool", ([deployer, liquidity_provider_1,
         new BN("99900")).div(new BN("100000"));
 
       await collateral_ccy_token.methods.approve(contract_addr,
-        weth_pledged_amount).send({from: borrower});
+        weth_pledged_amount.toString()).send({from: borrower});
       await zeroLiquidationLoanPool.borrow(min_USDC_borrow_amount,
         weth_pledged_amount, {"from": borrower});
 
